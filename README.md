@@ -12,7 +12,7 @@ After satisfing upper denpendencies, you can type following for making the "prep
 >>make preprocess<br>
 
 Get binaries for graph algorithms:<br>
-		make
+>>make
 		
 ## Get Started
 ### Preprocess

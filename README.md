@@ -10,6 +10,7 @@ GraphZ depends on following packages and tools:<br>
 ### Compilation
 After satisfing upper denpendencies, you can type following for making the "preprocess" executable file:
 >>make preprocess<br>
+
 Get binaries for graph algorithms:<br>
 		make
 		

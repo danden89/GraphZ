@@ -5,6 +5,7 @@ GraphZ depends on following packages and tools:<br>
 >>g++ >= 4.7<br>
 >>boost >= 1.55<br>
 >>tc_malloc >= 2.0<br>
+>>STXXL >= 1.4.1
 
 ### Compilation
 After satisfing upper denpendencies, you can type following for making the "preprocess" executable file:

@@ -26,6 +26,7 @@ namespace graphzx {
     class Engine {
     private:
         unsigned int max_iter_num;
+  //      unsigned int worker_num;
 
 
     private:
@@ -108,6 +109,39 @@ namespace graphzx {
             tp = new boost::threadpool::pool(worker_num+10);
         }
 
+        //        Engine(unsigned int _max_iter_num, GraphProperty *_gp, unsigned int _worker_num) \
+//    : max_iter_num(_max_iter_num), gp(_gp), worker_num(_worker_num)
+        //        {
+        //            om = new OpManager<vertex_val_t, op_val_t>(string("val"), gp);
+        //            tp = new pool(worker_num);
+        //
+        //            
+        //            in_iobuffer = new PTaskBlockMgrWithScheduler< struct io_buffer <edge_t, BUFF_SIZE> > (100);
+        //            vertex_buffers = new PTaskBlockMgrWithScheduler< struct TaskBlock<struct adjlst<edge_t>, TASK_SIZE> > *[worker_num]);
+        //            for (int i = 0; i < worker_num; i++) {
+        //                vertex_buffers[i] = new PTaskBlockMgrWithScheduler< struct TaskBlock<struct adjlst<edge_t>, TASK_SIZE> > (100);
+        //                check_malloc(vertex_buffers[i]);
+        //            }
+        //
+        //            op_handle_buffers = new PTaskBlockMgrWithScheduler< struct TaskBlock<struct AOP<op_val_t>, TASK_SIZE> > *[worker_num]);
+        //            for (int i = 0; i < worker_num; i++) {
+        //                op_handle_buffers[i] = new PTaskBlockMgr< struct TaskBlock<struct AOP<op_val_t>, TASK_SIZE> >(100);
+        //                check_malloc(op_handle_buffers[i]);
+        //            }
+        //            output_op_buffer = new PTaskBlockMgrWithScheduler< struct TaskBlock<struct AOP<op_val_t>, OP_TASK_SIZE>>(200);
+        //            
+        //            vals = new vertex_val_t[gp->nvertices_per_partition];
+        //            
+        //            //init sio
+        //            sio = new Sio<vertex_val_t, op_val_t, BUFF_SIZE>(gp, in_iobuffer);
+        //            dispatcher = new Dispatcher<edge_t, BUFF_SIZE, TASK_SIZE, worker_num>(in_iobuffer, vertex_buffers);
+        //            
+        //            workers = new Worker<vertex_val_t, op_val_t, TASK_SIZE, OP_TASK_SIZE, worker_num, Application > *[worker_num];
+        //            for (int i = 0; i < worker_num; i++) {
+        //                workers[i] = new Worker<vertex_val_t, op_val_t, TASK_SIZE, OP_TASK_SIZE, worker_num, Application >();
+        //            }
+        //        }
+
         virtual ~Engine() {
             
             delete tp;
@@ -134,10 +168,19 @@ namespace graphzx {
             }
             delete workers;
         }
-       
+
+//        void int_vals(){
+//            vertex_val_t seed;
+//            #pragma omp parallel for num_threads(8)
+//            for(int i=0; i< gp->nvertices_per_partition;i++){
+//                vals[i] = seed;
+//            }
+//        }
+        
         int start() {
             for (int iter = 0; iter < max_iter_num; iter++) {
                 gp->converged = true;
+                gp->diff = 0.0 ;
                 for (int nth = 0; nth < gp-> par_num; nth++) {
                     logstream(LOG_INFO) << "iter: " << iter << std::endl; 
                     logstream(LOG_INFO) << "nth_par: " << nth << std::endl;
@@ -180,9 +223,22 @@ namespace graphzx {
                 logstream(LOG_INFO) << "dispatcher times: "  << std::endl;
                 dispatcher->timer.tellself();
 
+                logstream(LOG_INFO) << "Worker times: " << std::endl;
+                for (int i = 0; i < worker_num; i++) {
+                    workers[i]->local_timer.tellself();
+                    workers[i]->delegate_timer.tellself();
+                }
+
                 logstream(LOG_INFO) << "opmanager times: " << std::endl;
+                logstream(LOG_INFO) << "diff " << iter << ": " << gp->diff << std::endl;
                 opmgr->refresh_timer.tellself();
                 opmgr->write_timer.tellself();
+
+//                in_iobuffer->tell_self();
+//                op_handle_buffers[0]->tell_self();
+//                output_op_buffer->tell_self();
+//                logstream(LOG_DEBUG) << "msgc: " << Application::msgc << std::endl; 
+//                logstream(LOG_DEBUG) << "send_msgc: " << Application::send_msgc << std::endl; 
 
                 if (iter != 0 && gp->converged)
                     return 0;

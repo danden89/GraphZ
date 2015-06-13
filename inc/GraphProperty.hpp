@@ -23,6 +23,7 @@ public:
     unsigned long long par_num; //the number of partitions
     unsigned long long active_par_num; //the number of partitions that have a vertex whose degree > 1
     bool converged;
+    double diff; // record the  variations for each iteration 
 
     
     GraphProperty(string _fpath){

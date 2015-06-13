@@ -1,4 +1,5 @@
 #include <graphz.h>
+#include <cmath>
 
 struct vertex_val_t{
     float vval;
@@ -28,7 +29,31 @@ public:
         
         vertex_val_t& val = IApplication<vertex_val_t, op_val_t, edge_t>::get_val(padj->fid);
         
-        val.vval = 0.15 + 0.85 * val.agg_msg; 
+        if(padj->fid == 2325295 )
+        {
+//            logstream(LOG_DEBUG) << "2325295: " << val.vval<<" , "<< val.agg_msg << std::endl; 
+//            logstream(LOG_DEBUG) << "iter: " << iter << std::endl; 
+//            logstream(LOG_DEBUG) << "num: " << num << std::endl; 
+//            for (unsigned int i = 0; i < num; i++) {
+//                vertex_id oid = padj->edges[i].vid;
+//                logstream(LOG_DEBUG) << "oid: " << oid << std::endl; 
+//                //send_msgc++;
+//            }
+        }
+
+//        if (padj->fid == 2325262) {
+//            logstream(LOG_DEBUG) << "2325262: " << val.vval << " , " << val.agg_msg << std::endl;
+//            logstream(LOG_DEBUG) << "num: " << num << std::endl;
+//        }
+
+//        if (padj->fid >= 3997960) {
+//            logstream(LOG_DEBUG) << "padj->fid: " << padj->fid << std::endl;
+//            logstream(LOG_DEBUG) << "too large: " << num << std::endl;
+//        }
+        
+        float new_val = 0.15 + 0.85 * val.agg_msg; 
+        IApplication<vertex_val_t, op_val_t, edge_t>::add_diff( abs(new_val - val.vval) );
+        val.vval = new_val; 
         val.agg_msg = 0;
         
         if (num > 0) {
@@ -75,6 +100,14 @@ IApplication< vertex_val_t, op_val_t, edge_t>(_pworker) {
 
 };
 
+
+//template<typename vertex_val_t, typename op_val_t, typename edge_t>
+//int pagerank_app< vertex_val_t, op_val_t, edge_t >::msgc = 0;
+//template<typename vertex_val_t, typename op_val_t, typename edge_t>
+//int pagerank_app< vertex_val_t, op_val_t, edge_t >::send_msgc = 0;
+//
+//template<typename vertex_val_t, typename op_val_t, typename edge_t>
+//int pagerank_app< vertex_val_t, op_val_t, edge_t >::updatec = 0;
 
 int main(int argc, char *argv[]) {
     //GraphProperty *gp = new GraphProperty(string("/home/ubu/Downloads/com-lj.ungraph.txt"));

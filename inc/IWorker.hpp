@@ -12,6 +12,7 @@ namespace graphzx {
         virtual vertex_val_t& get_value(vertex_id vid) =0;
         virtual void set_value(vertex_id vid, vertex_val_t vval) = 0;
         virtual void update_notify() = 0;
+        virtual void add_diff(double _diff) = 0;
     };
 }
 

@@ -140,7 +140,14 @@ namespace graphzx {
             local_timer.start();
 #endif
             int par = Vertex_Tracker::get_partition(vid);
-
+//            if(vid == 710262){
+//                logstream(LOG_DEBUG) << "nth_par::" << nth_par << std::endl;
+//                logstream(LOG_DEBUG) << "par of 710262::" << par << std::endl;
+//            }
+//            if(vid == 342330){
+//                logstream(LOG_DEBUG) << "nth_par::" << nth_par << std::endl;
+//                logstream(LOG_DEBUG) << "par of 342330::" << par << std::endl;
+//            }
 #ifdef WORKER_TIMER
             local_timer.stop();
 #endif
@@ -152,7 +159,12 @@ namespace graphzx {
 #ifdef WORKER_TIMER
                 local_timer.stop();
 #endif
-
+                if (vid == 710262) {
+                    //                    logstream(LOG_DEBUG) << "owner_id of 710262::" << owner_id << std::endl;
+                }
+                if (vid == 342330) {
+                    //                    logstream(LOG_DEBUG) << "owner_id of 342330::" << owner_id << std::endl;
+                }
                 if (owner_id == worker_id) {
                     update_vertex(vid, val);
                 } else {
@@ -235,7 +247,10 @@ namespace graphzx {
             gp->converged = false;
         }
 
-       
+        inline void add_diff(double _diff) {
+            gp->diff += _diff;
+        }
+        
         void *start_work(int _iter, int _nth_par) {
             iter = _iter;
             nth_par = _nth_par;
@@ -257,6 +272,20 @@ namespace graphzx {
             struct adjlst<edge_t> *padj;
 
             while (true) {
+//                logstream(LOG_DEBUG) << "get_one: " << worker_id << std::endl;
+//                logstream(LOG_DEBUG) << "all_tasks_received: " << all_tasks_received << std::endl;
+//                logstream(LOG_DEBUG) << "op_end_msg: " << op_end_msg << std::endl;
+
+//                logstream(LOG_DEBUG) << worker_id << "vertex_buffers: " << vertex_buffers[worker_id]->get_free_num() << std::endl;
+//                logstream(LOG_DEBUG) << worker_id << "vertex_buffers: " << vertex_buffers[worker_id]->get_task_num() << std::endl;
+//                logstream(LOG_DEBUG) << worker_id << "op_handle_buffers: " << op_handle_buffers[worker_id]->get_free_num() << std::endl;
+//                logstream(LOG_DEBUG) << worker_id << "op_handle_buffers: " << op_handle_buffers[worker_id]->get_task_num() << std::endl;
+//
+//                if (worker_id == 0) {
+//                    logstream(LOG_DEBUG) << worker_id << "output_op_buffer: " << output_op_buffer->get_free_num() << std::endl;
+//                    logstream(LOG_DEBUG) << worker_id << "output_op_buffer: " << output_op_buffer->get_task_num() << std::endl;
+//
+//                }
                 if (!all_tasks_received) {
                     if (ataskblock->size != INVALID_SIZE) {
                         for (int i = 0; i < ataskblock->size; i++) {

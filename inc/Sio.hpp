@@ -47,9 +47,50 @@ namespace graphzx {
 #define MAX_QD 200000
 
     using namespace std;
+//    int block_num1 = 0;
+//    int block_size1 = 512;
+//    int block_num2 = 0;
+//    int block_size2 = 4096;
+//    int block_num3 = 0;
+//    int block_size3 = 8192;
 
     const unsigned int big_num = 4;
     const unsigned int big_buffer = 1024 * 1024 * 6;
+
+//    class bigbuf {
+//        char bigbufs[big_num][big_buffer];
+//        bool hasdata[big_num];
+//        FILE *edge_fd;
+//        
+//        int cur_buf;
+//        unsigned long long ofst;
+//         
+//    public:
+//
+//        bigbuf(FILE *_edge_fd) {
+//            edge_fd = _edge_fd;
+//            cur_buf = 0;
+//            ofst = 0;
+//            for (int i = 0; i < big_num; i++) {
+//                unsigned long long rdb = fread(bigbufs[i], 1, big_buffer, edge_fd);
+//                if (rdb > 0)
+//                    hasdata[i] = true;
+//                else
+//                    hasdata[i] = false;
+//            }            
+//        }
+//        
+//        inline void read(void *data, unsigned long long nbytes){
+//            unsigned dataidx=0;
+//            while(nbytes>0){
+//                unsigned long long max_readable_bytes = big_buffer - ofst;
+//                if( nbytes > max_readable_bytes ){
+//                    memcpy(data, cur_buf[cur_buf]+ofst, max_readable_bytes);
+//                    
+//                }
+//            }
+//        }
+//    };
     
     template<typename edge_t, size_t BUFF_SIZE>
     class Sio {
@@ -184,6 +225,7 @@ namespace graphzx {
                             nbytes = ((nth_par + 1) * nvertices_per_partition - idbases[i].vid) * sizeof (edge_t) * idbases[i].deg;
 //                            logstream(LOG_DEBUG) << "nbytes:  " << nbytes << std::endl;
                             read_assign(nbytes, idbases[i].vid, (nth_par + 1) * nvertices_per_partition);
+                            logstream(LOG_DEBUG) << "endid:  " << (nth_par + 1) * nvertices_per_partition << std::endl;
                         } else {
                             nbytes = (active_vertices_num - idbases[i].vid) * sizeof (edge_t) * idbases[i].deg;
                             read_assign( nbytes, idbases[i].vid, active_vertices_num);
@@ -191,8 +233,12 @@ namespace graphzx {
                             struct io_buffer <edge_t, BUFF_SIZE> *zerobuf = in_iobuffer->get_free_block();
                             zerobuf->bufsiz = 0;
                             zerobuf->startid = active_vertices_num;
-                            zerobuf->endid = (nth_par + 1) * nvertices_per_partition;
+                            if ( gp->vertices_num < (nth_par + 1) * nvertices_per_partition)
+                                zerobuf->endid = active_vertices_num;
+                            else
+                                zerobuf->endid = (nth_par + 1) * nvertices_per_partition;
                             in_iobuffer->add_task_block(zerobuf);
+                            
                         }
                     } else {
                         nbytes = bases[i + 1].ofst - bases[i].ofst;

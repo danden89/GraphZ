@@ -34,6 +34,11 @@ namespace graphzx {
             pworker -> update_notify();
         }
         
+        //to add the diff to each iteration
+        inline void add_diff(double _diff){
+            pworker -> add_diff(_diff);
+        }
+        
         // decide what messages to be sent to its neighbors
         virtual void update(struct adjlst<edge_t> *padj, unsigned int iter) = 0;
 

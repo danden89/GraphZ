@@ -11,6 +11,7 @@
 //#include <stxxl/vector>
 #include "stxxl.h"
 
+
 #include "../inc/pre_process.h"
 #include "../inc/logger.hpp"
 #include <libconfig.h++> 
@@ -18,6 +19,7 @@
 #define NODE_NUM 5997962
 #define MAX_EDGES 20000
 #define BUF_SIZ 100000000
+#define INF ((unsigned int)-1)
 namespace pre {
     using namespace std;
     using namespace libconfig;
@@ -39,11 +41,11 @@ namespace pre {
     
     unsigned long long nvertices_per_partition;
 
- //  char *ifpath = "/home/ubu/Downloads/com-lj.ungraph.txt.100000";
+   char *ifpath = "/home/ubu/Downloads/com-lj.ungraph.txt.100000";
  //   char *ifpath = "/home/ubu/Downloads/com-lj.ungraph.txt";
  //   char *ifpath = "/run/media/xu/graph/ydata-sum.txt";
     //char *ifpath = "/home/xu/Downloads/friend/com-friendster.ungraph.txt";
-    char *ifpath = "/mnt/ssd/friend/com-friendster.ungraph.txt";
+  //  char *ifpath = "/mnt/ssd/friend/com-friendster.ungraph.txt";
 
     bool directed = true;
     unsigned long long active_vertices_num = 0; //the number of vertices that has a out-edge
@@ -429,12 +431,12 @@ flookup_out->tellp() / sizeof (vertex_id);
 // logstream(LOG_DEBUG) << "mark 2: " << std::endl;
         sorter.sort();
             
-        unsigned int old_degree = 0;
+        unsigned int old_degree = INF;
         while (!sorter.empty()) {
             fod_edge_t aedge = (*sorter);
             degree_id did;
             degree_offset dof;
-            if (aedge.degree > old_degree) {
+            if (aedge.degree < old_degree) {
                 old_degree = aedge.degree;
                 did.deg = aedge.degree;
                 did.vid = aedge.fid;
@@ -511,12 +513,12 @@ int main(int argc, char *argv[]) {
     system("rm /var/tmp/stxxl");
      ifpath = argv[1]; 
      unsigned long vertices_per_num = atol(argv[2]);
-    //preprocess(ifpath, 1000000, true);
+//     preprocess(ifpath, 1000000, true);
   //  preprocess(ifpath, 2000000, true);
  //   preprocess(ifpath, 300000000, true);
 //      preprocess(ifpath, 10000000, true);
       preprocess(ifpath, vertices_per_num, true);
-    //preprocess(ifpath, 1000000);
+ //   preprocess(ifpath, 1000000, true);
 
     return 0;
 }

@@ -34,7 +34,7 @@ app_%: $(SOURCES)
 	$(CC)  $(CFLAGS) $(INCLUDES) -o $(BIN_DIR)/$(patsubst $(sufix)%,%,$@) src/$(patsubst $(sufix)%,%,$@).cpp $(SOURCES) src/io_task.cpp $(LFLAGS)
 
 preprocess: src/preprocess.cpp
-	$(CC) -O3  -fopenmp -o preprocess src/preprocess.cpp -lstxxl -lpthread -lconfig++
+	$(CC) -O3  -I./inc -fopenmp -o preprocess src/preprocess.cpp -lstxxl -lpthread -lconfig++
 	@echo Finish generating preprocess ...
 
 

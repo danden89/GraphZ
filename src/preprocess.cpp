@@ -4,8 +4,7 @@
 #include<stdlib.h>
 #include<sys/stat.h>
 #include<queue>
-#include"../inc/Bitmap.hpp"
-#include "../inc/graphtypes.h"
+#include "graphtypes.h"
 #include "stxxl/sorter"
 #include "stxxl/queue"
 //#include <stxxl/vector>
@@ -77,8 +76,6 @@ namespace pre {
     vertex_id newid0 = 0;
     offset base = 0;
     unsigned int partition_num; //the number of partitions
-    
-    graphzx::Bitmap *bmp;
 
     vertex_id label_buf[BUF_SIZ];
 
